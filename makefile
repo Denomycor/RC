@@ -14,8 +14,7 @@ SRCFILES := $(shell find $(SRCDIR) -type f \( -iname "*.$(EXTENSION)" \) -exec b
 HEADERFILES := $(shell find $(INCLUDEDIR) -type f \( -iname "*.h" \) -exec basename \{} \;)
 OBJFILES := $(SRCFILES:%.$(EXTENSION)=%.o)
 
-MACROS := MAKE
-BASEFLAGS := $(addprefix -D ,$(MACROS)) -std=c++2a
+BASEFLAGS := -std=c++2a
 DEBUGFLAGS := $(BASEFLAGS) -g -Wall -D DEBUG
 RELEASEFLAGS := $(BASEFLAGS) -O2
 
@@ -93,3 +92,19 @@ c:
 r:
 	rm $(SRCDIR)/$(A).$(EXTENSION)
 	rm $(INCLUDEDIR)/$(A).h
+
+
+#exec with std args
+exec:
+	@$(BINDIR)/$(TARGET) $$(cat args.txt)
+
+
+#run valgrind
+valgrind:
+	valgrind --leak-check=full $(BINDIR)/$(TARGET) $$(cat args.txt)
+
+
+#get todo list
+todo:
+	@grep -R TODO -n | tr -s ' ' | grep -v makefile
+	
